@@ -1,0 +1,16 @@
+create index idx_users_role on public.users(role);
+create index idx_pricing_route_type on public.pricing_plans(from_location, to_location, transport_type);
+create index idx_pricing_active on public.pricing_plans(is_active);
+create index idx_trips_status on public.trips(status);
+create index idx_trips_departure on public.trips(departure_date);
+create index idx_trips_route on public.trips(from_location, to_location);
+create index idx_trips_plan on public.trips(pricing_plan_id);
+create index idx_bookings_trip on public.bookings(trip_id);
+create index idx_bookings_company on public.bookings(company_id);
+create index idx_bookings_status on public.bookings(status);
+create index idx_bookings_company_status on public.bookings(company_id, status);
+create index idx_containers_booking on public.containers(booking_id);
+create index idx_status_history_booking on public.booking_status_history(booking_id);
+create index idx_invoices_company on public.invoices(company_id);
+create index idx_invoices_status on public.invoices(status);
+create index idx_invoices_issued on public.invoices(issued_at);
