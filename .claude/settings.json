@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo \"TSC Exit: $?\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\dell\\OneDrive\\Desktop\\NEXTJS\\ocean-bridge\\docs"
+    ]
+  }
+}

@@ -3,7 +3,18 @@
     "allow": [
       "Bash(npm install:*)",
       "Bash(npx supabase:*)",
-      "Bash(npx shadcn@latest init -d)"
+      "Bash(npx shadcn@latest init -d)",
+      "Bash(npx shadcn@latest add input label card badge table dropdown-menu avatar separator sheet dialog select textarea toast skeleton -y)",
+      "Bash(npx shadcn@latest add input label card badge table dropdown-menu avatar separator sheet dialog select textarea skeleton -y)",
+      "Bash(npx shadcn@latest add sonner -y)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(npx next:*)",
+      "Bash(node -e \"const r = require\\('recharts'\\); console.log\\(Object.keys\\(r\\).slice\\(0,15\\).join\\(', '\\)\\)\")",
+      "Bash(node -e \"const z = require\\('zod'\\); const e = z.string\\(\\).safeParse\\(1\\); if\\(!e.success\\) console.log\\(Object.keys\\(e.error\\)\\)\")",
+      "Bash(node -e \"const z = require\\('zod'\\); const e = z.string\\(\\).safeParse\\(1\\); if\\(!e.success\\) { const err = e.error; console.log\\('issues:', err.issues?.length\\); console.log\\('errors:', err.errors?.length\\); console.log\\('flatten:', JSON.stringify\\(err.flatten\\(\\)\\)\\); }\")",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(xargs sed:*)"
     ]
   }
 }
