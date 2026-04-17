@@ -1,7 +1,3 @@
-// Server Component
-// Features section — highlights the 3 core platform capabilities.
-// Static content — icons from lucide-react.
-
 import { Ship, Package, FileText } from 'lucide-react'
 
 const FEATURES = [
@@ -32,7 +28,7 @@ export function FeaturesSection() {
   return (
     <section id="features" className="bg-[#F8F9FB] py-24">
       <div className="mx-auto max-w-7xl px-6">
-        {/* Section header */}
+        {}
         <div className="mb-16 text-center">
           <span className="text-xs font-bold uppercase tracking-widest text-[#4A90D9]">
             Platform Features
@@ -45,7 +41,7 @@ export function FeaturesSection() {
           </p>
         </div>
 
-        {/* Feature cards */}
+        {}
         <div className="grid gap-8 md:grid-cols-3">
           {FEATURES.map((feature) => {
             const Icon = feature.icon
@@ -54,7 +50,7 @@ export function FeaturesSection() {
                 key={feature.title}
                 className="group rounded-xl border border-[#E5E7EB] bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
               >
-                {/* Icon circle */}
+                {}
                 <div
                   className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl ${feature.color}`}
                 >

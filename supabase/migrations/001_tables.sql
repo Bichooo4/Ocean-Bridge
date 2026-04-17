@@ -1,4 +1,3 @@
--- USERS (admin + staff)
 create table public.users (
   id         uuid primary key references auth.users(id) on delete cascade,
   role       varchar not null check (role in ('admin', 'staff')),
@@ -7,7 +6,6 @@ create table public.users (
   created_at timestamptz default now()
 );
 
--- COMPANIES
 create table public.companies (
   id           uuid primary key references auth.users(id) on delete cascade,
   company_name varchar not null check (length(company_name) >= 2),
@@ -16,7 +14,6 @@ create table public.companies (
   created_at   timestamptz default now()
 );
 
--- PRICING PLANS
 create table public.pricing_plans (
   id             uuid primary key default gen_random_uuid(),
   from_location  varchar not null check (length(from_location) >= 2),
@@ -29,7 +26,6 @@ create table public.pricing_plans (
   constraint check_locations_differ check (from_location <> to_location)
 );
 
--- TRIPS
 create table public.trips (
   id              uuid primary key default gen_random_uuid(),
   pricing_plan_id uuid not null references public.pricing_plans(id) on delete restrict,
@@ -48,7 +44,6 @@ create table public.trips (
   constraint check_dates check (arrival_date > departure_date)
 );
 
--- BOOKINGS
 create table public.bookings (
   id              uuid primary key default gen_random_uuid(),
   trip_id         uuid not null references public.trips(id) on delete restrict,
@@ -65,7 +60,6 @@ create table public.bookings (
   constraint uq_one_booking_per_company_per_trip unique (trip_id, company_id)
 );
 
--- CONTAINERS
 create table public.containers (
   id          uuid primary key default gen_random_uuid(),
   booking_id  uuid not null references public.bookings(id) on delete cascade,
@@ -74,7 +68,6 @@ create table public.containers (
   created_at  timestamptz default now()
 );
 
--- BOOKING STATUS HISTORY
 create table public.booking_status_history (
   id         uuid primary key default gen_random_uuid(),
   booking_id uuid not null references public.bookings(id) on delete cascade,
@@ -84,7 +77,6 @@ create table public.booking_status_history (
   created_at timestamptz default now()
 );
 
--- INVOICES
 create table public.invoices (
   id           uuid primary key default gen_random_uuid(),
   booking_id   uuid not null unique references public.bookings(id) on delete restrict,

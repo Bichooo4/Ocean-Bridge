@@ -1,8 +1,3 @@
-// Server Component
-// Shared layout for all auth pages (login, signup).
-// Split screen: navy branding panel on left, form on right.
-// Left panel is hidden on mobile — form takes full width.
-
 import { CheckCircle } from 'lucide-react'
 import { Logo } from '@/components/shared/Logo'
 
@@ -15,7 +10,7 @@ const FEATURES = [
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
-      {/* Left branding panel — hidden on mobile */}
+      {}
       <div className="hidden flex-col justify-between bg-[#1B2E5E] p-10 md:flex md:w-1/2 lg:w-2/5">
         <div className="flex flex-1 flex-col items-center justify-center gap-10">
           <Logo size="lg" white />
@@ -35,7 +30,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </p>
       </div>
 
-      {/* Right form panel */}
+      {}
       <div className="flex flex-1 items-center justify-center bg-white px-6 py-12">
         <div className="w-full max-w-[420px]">{children}</div>
       </div>

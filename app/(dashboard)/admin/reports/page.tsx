@@ -1,4 +1,3 @@
-// Client Component — admin reports with live data from /api/reports/summary.
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
@@ -63,7 +62,6 @@ export default function AdminReportsPage() {
     { key: 'total_spent',  header: 'Total Spent',    render: (r: CompanyRow) => formatPrice(r.total_spent)                            },
   ]
 
-  // Map API data to chart format
   const chartStatusData = (data?.bookings_by_status ?? []).map((s) => ({
     status: s.status.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
     count:  s.count,
@@ -81,7 +79,7 @@ export default function AdminReportsPage() {
     <div className="space-y-8">
       <PageHeader title="Reports & Analytics" subtitle="Business overview and performance metrics" />
 
-      {/* Date range filter */}
+      {}
       <div className="flex flex-wrap items-end gap-4 rounded-xl border border-[#E5E7EB] bg-white p-4">
         <div className="space-y-1.5">
           <Label>From Date</Label>

@@ -1,5 +1,3 @@
-// Client Component — staff invoices with live data.
-// Uses useInvoices hook; toggle calls PATCH /api/invoices/[id].
 'use client'
 
 import { useState } from 'react'

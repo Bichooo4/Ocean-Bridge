@@ -1,9 +1,5 @@
-// API Route — /api/bookings/[id]
-// GET: single booking detail with all related data
-// PATCH: company edits booking — always resets to pending
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth, requireRole } from '@/lib/auth'
 import { updateBookingSchema } from '@/lib/validations/booking'
 
 type Params = { params: Promise<{ id: string }> }
@@ -11,12 +7,9 @@ type Params = { params: Promise<{ id: string }> }
 export async function GET(_req: NextRequest, { params }: Params) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const auth = await requireAuth()
+    if (!auth.ok) return auth.response
+    const { supabase } = auth
 
     const { data: booking, error } = await supabase
       .from('bookings')
@@ -34,7 +27,6 @@ export async function GET(_req: NextRequest, { params }: Params) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 })
     }
 
-    // Fetch invoice separately
     const { data: invoice } = await supabase
       .from('invoices')
       .select('*')
@@ -65,16 +57,9 @@ export async function GET(_req: NextRequest, { params }: Params) {
 export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    if (user.app_metadata?.role !== 'company') {
-      return NextResponse.json({ error: 'Forbidden — company only' }, { status: 403 })
-    }
+    const auth = await requireRole(['company'])
+    if (!auth.ok) return auth.response
+    const { user, supabase } = auth
 
     const body = await req.json()
     const parsed = updateBookingSchema.safeParse(body)
@@ -87,7 +72,6 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     const { notes, containers } = parsed.data
 
-    // Fetch current booking — must belong to this company
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
       .select('*, trips:trip_id (base_price, per_kg_rate, max_containers)')
@@ -109,7 +93,6 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       )
     }
 
-    // Capacity check with new container count
     const { data: otherBookingIds } = await supabase
       .from('bookings')
       .select('id')
@@ -132,13 +115,11 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       return NextResponse.json({ error: 'Trip does not have enough capacity' }, { status: 400 })
     }
 
-    // Recalculate price
     const total_weight_kg = containers.reduce((s, c) => s + c.weight_kg, 0)
     const base  = (trip?.base_price  ?? 0) as number
     const rate  = (trip?.per_kg_rate ?? 0) as number
     const total_price = base + total_weight_kg * rate
 
-    // Delete old containers and insert new
     await supabase.from('containers').delete().eq('booking_id', id)
 
     const { error: insertError } = await supabase
@@ -151,7 +132,6 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     if (insertError) throw insertError
 
-    // Update booking
     const { data: updated, error: updateError } = await supabase
       .from('bookings')
       .update({
@@ -167,7 +147,6 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     if (updateError) throw updateError
 
-    // Status history
     await supabase.from('booking_status_history').insert({
       booking_id: id,
       updated_by: user.id,
@@ -175,7 +154,6 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       notes:      'Booking edited — reset to pending',
     })
 
-    // Trip status: if was full, may go back to open
     const newTotal = otherCount + containers.length
     if ((b.trips as Record<string, unknown> | null) !== null) {
       const newStatus = newTotal >= maxContainers ? 'full' : 'open'
@@ -183,7 +161,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         .from('trips')
         .update({ status: newStatus })
         .eq('id', b.trip_id as string)
-        .in('status', ['open', 'full'])   // only update if not in transit
+        .in('status', ['open', 'full'])   
     }
 
     return NextResponse.json({ booking: updated })

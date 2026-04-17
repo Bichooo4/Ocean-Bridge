@@ -1,5 +1,3 @@
-// Client Component — staff management with live data.
-// Fetches users table; create staff via StaffForm component.
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'

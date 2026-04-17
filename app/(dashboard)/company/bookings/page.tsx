@@ -1,5 +1,3 @@
-// Client Component — company bookings list with live data.
-// Uses useBookings hook — RLS scopes to logged-in company automatically.
 'use client'
 
 import { useState } from 'react'

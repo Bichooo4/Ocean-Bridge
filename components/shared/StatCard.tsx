@@ -1,7 +1,3 @@
-// Server Component
-// Dashboard metric card. Shows a single KPI with icon and optional trend.
-// Used in all three dashboards (admin, staff, company).
-
 import { cn } from '@/lib/utils'
 
 interface StatCardProps {
@@ -21,12 +17,12 @@ export function StatCard({ label, value, icon, trend, trendUp, className }: Stat
         className,
       )}
     >
-      {/* Icon circle */}
+      {}
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#EFF6FF]">
         {icon}
       </div>
 
-      {/* Text */}
+      {}
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-[#6B7280]">{label}</p>
         <p className="mt-1 text-2xl font-bold text-[#1B2E5E]">{value}</p>

@@ -1,13 +1,9 @@
-// Server Component
-// CTA section — final conversion push before the footer.
-// Navy background with two action buttons.
-
 import Link from 'next/link'
 
 export function CTASection() {
   return (
     <section id="contact" className="relative overflow-hidden bg-[#1B2E5E] py-24">
-      {/* Background decoration dots */}
+      {}
       <div className="absolute inset-0 opacity-10">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -19,7 +15,7 @@ export function CTASection() {
         </svg>
       </div>
 
-      {/* Corner decoration shapes */}
+      {}
       <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-[#4A90D9] opacity-10 blur-3xl" />
       <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-[#4A90D9] opacity-10 blur-3xl" />
 

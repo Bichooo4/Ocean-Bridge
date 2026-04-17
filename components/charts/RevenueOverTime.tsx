@@ -1,4 +1,3 @@
-// Client Component — Recharts LineChart showing monthly revenue trend.
 'use client'
 
 import {

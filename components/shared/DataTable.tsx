@@ -1,8 +1,3 @@
-// Server Component
-// Generic reusable data table. Pass columns config and data array.
-// Handles loading skeletons and empty state automatically.
-// Used across all listing pages (bookings, trips, invoices).
-
 import {
   Table,
   TableBody,

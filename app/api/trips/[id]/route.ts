@@ -1,9 +1,5 @@
-// API Route — /api/trips/[id]
-// GET: returns single trip with its bookings
-// Booking visibility filtered by role
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth'
 
 export async function GET(
   _req: NextRequest,
@@ -11,14 +7,9 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const role = (user.app_metadata?.role ?? '') as string
+    const auth = await requireAuth()
+    if (!auth.ok) return auth.response
+    const { user, role, supabase } = auth
 
     const { data: trip, error: tripError } = await supabase
       .from('trips')
@@ -30,8 +21,6 @@ export async function GET(
       return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
     }
 
-    // Build bookings query — company sees only their own
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let bookingsQuery: any = supabase
       .from('bookings')
       .select(`

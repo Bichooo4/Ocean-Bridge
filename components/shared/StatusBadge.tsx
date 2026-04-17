@@ -1,7 +1,3 @@
-// Server Component
-// Renders a colored status badge for bookings and trips.
-// Colors are defined in lib/constants.ts.
-
 import { Badge } from '@/components/ui/badge'
 import { BOOKING_STATUS_COLORS, TRIP_STATUS_COLORS } from '@/lib/constants'
 import { formatStatus } from '@/lib/utils'

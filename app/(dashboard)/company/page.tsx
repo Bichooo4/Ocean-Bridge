@@ -1,5 +1,3 @@
-// Client Component — company dashboard home with live data.
-// Uses useBookings + useInvoices hooks scoped to the logged-in company via RLS.
 'use client'
 
 import Link from 'next/link'
@@ -68,7 +66,6 @@ export default function CompanyDashboardPage() {
 
   if (loading) return <LoadingSpinner size="lg" className="py-32" />
 
-  // Welcome empty state for new companies with no bookings
   if (!loading && bookings.length === 0) {
     return (
       <div className="space-y-6">

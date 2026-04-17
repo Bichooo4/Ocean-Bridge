@@ -1,22 +1,12 @@
-// API Route — /api/trips
-// GET: returns trips filtered by role and query params
-// POST: admin only — creates new trip with pricing snapshot
-// Server-side only — uses supabase server client
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth, requireRole } from '@/lib/auth'
 import { createTripSchema } from '@/lib/validations/trip'
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const role = (user.app_metadata?.role ?? '') as string
+    const auth = await requireAuth()
+    if (!auth.ok) return auth.response
+    const { role, supabase } = auth
     const { searchParams } = req.nextUrl
     const statusParam    = searchParams.get('status')
     const transportParam = searchParams.get('transport_type')
@@ -25,15 +15,12 @@ export async function GET(req: NextRequest) {
     const limit          = Math.min(Math.max(parseInt(searchParams.get('limit')  ?? '50', 10), 1), 200)
     const offset         = Math.max(parseInt(searchParams.get('offset') ?? '0',  10), 0)
 
-    // Build base query
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let query: any = supabase
       .from('trips')
       .select('*', { count: 'exact' })
       .order('departure_date', { ascending: true })
       .range(offset, offset + limit - 1)
 
-    // Companies only see bookable trips
     if (role === 'company') {
       query = query.in('status', ['open', 'full'])
     }
@@ -50,7 +37,6 @@ export async function GET(req: NextRequest) {
 
     if (tripsRes.error) throw tripsRes.error
 
-    // Compute booking count per trip in JS
     const countsByTrip = ((bookingsRes.data ?? []) as { trip_id: string }[]).reduce(
       (acc, b) => { acc[b.trip_id] = (acc[b.trip_id] ?? 0) + 1; return acc },
       {} as Record<string, number>,
@@ -69,16 +55,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    if (user.app_metadata?.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden — admin only' }, { status: 403 })
-    }
+    const auth = await requireRole(['admin'])
+    if (!auth.ok) return auth.response
+    const { user, supabase } = auth
 
     const body = await req.json()
     const parsed = createTripSchema.safeParse(body)
@@ -91,7 +70,6 @@ export async function POST(req: NextRequest) {
 
     const { pricing_plan_id, departure_date, arrival_date, max_containers } = parsed.data
 
-    // Fetch pricing plan for snapshot
     const { data: plan, error: planError } = await supabase
       .from('pricing_plans')
       .select('*')

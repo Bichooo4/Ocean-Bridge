@@ -1,5 +1,3 @@
-// Client Component — pending approvals list with real approve action.
-// Calls PATCH /api/bookings/[id]/approve on confirm.
 'use client'
 
 import { useState } from 'react'

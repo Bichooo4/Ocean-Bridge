@@ -1,7 +1,3 @@
-// Client Component — needs usePathname for active link detection
-// Main sidebar navigation. Renders different nav items based on user role.
-// Used inside DashboardLayout.
-// onNavClick: called when a link is clicked (used to close mobile sheet).
 'use client'
 
 import Link from 'next/link'
@@ -68,12 +64,12 @@ export function Sidebar({ role, userName, userEmail, onNavClick }: SidebarProps)
 
   return (
     <aside className="flex h-full w-64 flex-col bg-[#1B2E5E]">
-      {/* Logo */}
+      {}
       <div className="flex h-16 items-center border-b border-white/10 px-5">
         <Logo size="sm" white />
       </div>
 
-      {/* Nav items */}
+      {}
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         <ul className="space-y-1">
           {navItems.map((item) => {
@@ -104,7 +100,7 @@ export function Sidebar({ role, userName, userEmail, onNavClick }: SidebarProps)
         </ul>
       </nav>
 
-      {/* Bottom user section */}
+      {}
       <div className="border-t border-white/10 p-3">
         <div className="mb-2 flex items-center gap-3 rounded-lg px-2 py-2">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#4A90D9] text-xs font-bold text-white">

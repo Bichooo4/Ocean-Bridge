@@ -1,16 +1,12 @@
-/**
- * Pagination — prev / page-numbers / next controls.
- * Shows at most 5 page numbers centred around the current page.
- */
 'use client'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface PaginationProps {
-  page:       number      // 0-based current page
+  page:       number      
   totalPages: number
-  total:      number      // total row count
+  total:      number      
   pageSize:   number
   onPageChange: (page: number) => void
   className?: string
@@ -29,7 +25,6 @@ export function Pagination({
   const from  = page * pageSize + 1
   const to    = Math.min((page + 1) * pageSize, total)
 
-  // Build window of at most 5 page indices
   const WINDOW = 5
   let start = Math.max(0, page - Math.floor(WINDOW / 2))
   const end = Math.min(totalPages - 1, start + WINDOW - 1)
@@ -38,15 +33,15 @@ export function Pagination({
 
   return (
     <div className={cn('flex items-center justify-between gap-4 pt-4', className)}>
-      {/* Row count */}
+      {}
       <p className="text-sm text-[#6B7280]">
         Showing <span className="font-medium text-[#1B2E5E]">{from}–{to}</span> of{' '}
         <span className="font-medium text-[#1B2E5E]">{total}</span>
       </p>
 
-      {/* Controls */}
+      {}
       <div className="flex items-center gap-1">
-        {/* Prev */}
+        {}
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page === 0}
@@ -56,7 +51,7 @@ export function Pagination({
           <ChevronLeft className="h-4 w-4" />
         </button>
 
-        {/* Page numbers */}
+        {}
         {start > 0 && (
           <>
             <PageBtn n={0}    current={page} onClick={onPageChange} />
@@ -75,7 +70,7 @@ export function Pagination({
           </>
         )}
 
-        {/* Next */}
+        {}
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages - 1}

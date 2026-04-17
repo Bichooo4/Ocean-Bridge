@@ -1,6 +1,3 @@
-// Client Component — needs useState for mobile menu toggle
-// Sticky top navigation bar for the landing page.
-// Contains logo, nav links, and CTA buttons.
 'use client'
 
 import { useState } from 'react'
@@ -21,10 +18,10 @@ export function LandingNav() {
   return (
     <header className="sticky top-0 z-50 border-b border-[#E5E7EB] bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-6">
-        {/* Logo */}
+        {}
         <Logo size="lg" />
 
-        {/* Desktop nav */}
+        {}
         <nav className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map((link) => (
             <a
@@ -37,7 +34,7 @@ export function LandingNav() {
           ))}
         </nav>
 
-        {/* Desktop CTAs */}
+        {}
         <div className="hidden items-center gap-3 md:flex">
           <Link
             href="/login"
@@ -53,7 +50,7 @@ export function LandingNav() {
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
+        {}
         <button
           className="flex items-center justify-center rounded-lg p-2 text-[#1B2E5E] md:hidden"
           onClick={() => setOpen((v) => !v)}
@@ -63,7 +60,7 @@ export function LandingNav() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {}
       {open && (
         <div className="border-t border-[#E5E7EB] bg-white px-6 pb-6 md:hidden">
           <nav className="flex flex-col gap-1 pt-4">

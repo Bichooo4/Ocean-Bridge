@@ -1,5 +1,3 @@
-// Client Component — admin dashboard home with live data.
-// Uses useBookings, useTrips, useInvoices hooks.
 'use client'
 
 import Link from 'next/link'

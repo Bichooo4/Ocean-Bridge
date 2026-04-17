@@ -39,6 +39,9 @@ yarn-error.log*
 /docs/
 PROJECT_AUDIT_REPORT.md
 
+# claude code editor settings (local permissions, hooks — machine-specific)
+.claude/
+
 # vercel
 .vercel
 

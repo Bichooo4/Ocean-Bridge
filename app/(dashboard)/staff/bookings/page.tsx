@@ -1,5 +1,3 @@
-// Client Component — staff bookings management with live data.
-// Uses useBookings hook; approve/cancel call API routes.
 'use client'
 
 import { useState } from 'react'

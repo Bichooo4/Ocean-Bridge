@@ -1,7 +1,3 @@
-// Server Component
-// Empty state illustration shown when a list or table has no data.
-// Pass a lucide icon, title, description, and optional CTA button.
-
 interface EmptyStateProps {
   icon?: React.ReactNode
   title: string

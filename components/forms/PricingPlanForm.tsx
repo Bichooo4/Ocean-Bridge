@@ -1,8 +1,3 @@
-/**
- * PricingPlanForm — create a new pricing plan (admin only)
- * Shows a live preview of an example shipment cost as values are typed.
- * Submits via POST /api/pricing-plans.
- */
 'use client'
 
 import { useState } from 'react'
@@ -99,7 +94,7 @@ export function PricingPlanForm() {
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
         const msg  = (body as { error?: string }).error ?? 'Failed to create pricing plan'
-        // Map server errors back to field level if possible
+
         if (msg.toLowerCase().includes('different')) {
           setErrors({ to_location: msg })
         } else {
@@ -118,7 +113,7 @@ export function PricingPlanForm() {
 
   return (
     <div className="mx-auto max-w-xl space-y-5">
-      {/* Form card */}
+      {}
       <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-[#E5E7EB] bg-white p-6 shadow-sm">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
@@ -222,7 +217,7 @@ export function PricingPlanForm() {
         </div>
       </form>
 
-      {/* Live pricing preview */}
+      {}
       <div className="rounded-xl border border-[#4A90D9]/30 bg-[#EFF6FF] p-5">
         <p className="mb-3 text-sm font-semibold text-[#1B2E5E]">
           Live Preview — Example: {EXAMPLE_WEIGHT_KG.toLocaleString()} kg shipment

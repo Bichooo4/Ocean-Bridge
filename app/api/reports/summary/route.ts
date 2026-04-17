@@ -1,66 +1,41 @@
-// API Route — /api/reports/summary
-// GET: returns aggregated analytics for admin/staff
-// Uses multiple parallel Supabase queries for performance
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireRole } from '@/lib/auth'
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const role = (user.app_metadata?.role ?? '') as string
-    if (!['admin', 'staff'].includes(role)) {
-      return NextResponse.json({ error: 'Forbidden — admin/staff only' }, { status: 403 })
-    }
+    const auth = await requireRole(['admin', 'staff'])
+    if (!auth.ok) return auth.response
+    const { supabase } = auth
 
     const { searchParams } = req.nextUrl
     const fromDate = searchParams.get('from_date')
     const toDate   = searchParams.get('to_date')
 
-    // Parallel queries
-    const [bookingsRes, invoicesRes, companiesRes, tripsRes] = await Promise.all([
-      // Bookings with company and trip info
+    const [bookingsRes, invoicesRes] = await Promise.all([
       (() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         let q: any = supabase
           .from('bookings')
-          .select('id, status, total_price, company_id, trip_id, created_at, trips:trip_id (transport_type)')
+          .select('id, status, total_price, company_id, created_at, trips:trip_id (transport_type), companies:company_id (company_name)')
         if (fromDate) q = q.gte('created_at', fromDate)
         if (toDate)   q = q.lte('created_at', toDate + 'T23:59:59Z')
         return q
       })(),
 
-      // All invoices
       (() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         let q: any = supabase.from('invoices').select('id, status, total_price, company_id, issued_at')
         if (fromDate) q = q.gte('issued_at', fromDate)
         if (toDate)   q = q.lte('issued_at', toDate + 'T23:59:59Z')
         return q
       })(),
-
-      // Companies with booking + invoice data
-      supabase.from('companies').select('id, company_name'),
-
-      // Trips for transport breakdown
-      supabase.from('trips').select('id, transport_type'),
     ])
 
     if (bookingsRes.error) throw bookingsRes.error
     if (invoicesRes.error) throw invoicesRes.error
 
-    const bookings  = (bookingsRes.data ?? [])  as Record<string, unknown>[]
-    const invoices  = (invoicesRes.data ?? [])  as Record<string, unknown>[]
-    const companies = (companiesRes.data ?? []) as Record<string, unknown>[]
-    const trips     = (tripsRes.data ?? [])     as Record<string, unknown>[]
-
-    // --- Aggregations ---
+    const bookings = (bookingsRes.data ?? []) as Record<string, unknown>[]
+    const invoices = (invoicesRes.data ?? []) as Record<string, unknown>[]
 
     const total_bookings  = bookings.length
     const active_bookings = bookings.filter(
@@ -77,7 +52,6 @@ export async function GET(req: NextRequest) {
       ? Math.round((cancelled_count / total_bookings) * 1000) / 10
       : 0
 
-    // Bookings by status
     const statusCounts: Record<string, number> = {}
     for (const b of bookings) {
       const s = b.status as string
@@ -87,17 +61,15 @@ export async function GET(req: NextRequest) {
       status, count,
     }))
 
-    // Revenue by month (from paid invoices)
     const monthMap: Record<string, number> = {}
     for (const inv of paid_invoices) {
-      const month = String(inv.issued_at ?? '').slice(0, 7) // 'YYYY-MM'
+      const month = String(inv.issued_at ?? '').slice(0, 7) 
       monthMap[month] = (monthMap[month] ?? 0) + (inv.total_price as number)
     }
     const revenue_by_month = Object.entries(monthMap)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([month, revenue]) => ({ month, revenue }))
 
-    // Bookings by transport type
     const transportMap: Record<string, number> = {}
     for (const b of bookings) {
       const trip = b.trips as Record<string, unknown> | null
@@ -108,19 +80,26 @@ export async function GET(req: NextRequest) {
       ([transport_type, count]) => ({ transport_type, count }),
     )
 
-    // Top companies by spend
-    const top_companies = companies
-      .map((c) => {
-        const compBookings = bookings.filter((b) => b.company_id === c.id)
-        const compInvoices = invoices.filter(
-          (i) => i.company_id === c.id && i.status === 'paid',
-        )
-        return {
-          company_name: c.company_name as string,
-          bookings:    compBookings.length,
-          total_spent: compInvoices.reduce((s, i) => s + (i.total_price as number), 0),
-        }
-      })
+    const companyNames: Record<string, string> = {}
+    const companyBookingCount: Record<string, number> = {}
+    for (const b of bookings) {
+      const cid = b.company_id as string
+      const co = b.companies as Record<string, string> | null
+      if (co?.company_name) companyNames[cid] = co.company_name
+      companyBookingCount[cid] = (companyBookingCount[cid] ?? 0) + 1
+    }
+    const companySpend: Record<string, number> = {}
+    for (const inv of invoices) {
+      if (inv.status !== 'paid') continue
+      const cid = inv.company_id as string
+      companySpend[cid] = (companySpend[cid] ?? 0) + (inv.total_price as number)
+    }
+    const top_companies = Object.keys(companyBookingCount)
+      .map((cid) => ({
+        company_name: companyNames[cid] ?? 'Unknown',
+        bookings:     companyBookingCount[cid],
+        total_spent:  companySpend[cid] ?? 0,
+      }))
       .sort((a, b) => b.total_spent - a.total_spent)
       .slice(0, 10)
 

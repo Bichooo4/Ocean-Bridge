@@ -1,8 +1,3 @@
-/**
- * StaffForm — create a staff or admin account (admin only)
- * Renders as a controlled Dialog form.
- * Submits via POST /api/staff which uses the service-role adminClient.
- */
 'use client'
 
 import { useState } from 'react'

@@ -1,9 +1,5 @@
-// API Route — /api/bookings/[id]/approve
-// PATCH: admin/staff approves a pending booking
-// Auto-creates invoice on approval
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireRole } from '@/lib/auth'
 
 export async function PATCH(
   _req: NextRequest,
@@ -11,19 +7,10 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params
-    const supabase = await createClient()
+    const auth = await requireRole(['admin', 'staff'])
+    if (!auth.ok) return auth.response
+    const { user, supabase } = auth
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const role = (user.app_metadata?.role ?? '') as string
-    if (!['admin', 'staff'].includes(role)) {
-      return NextResponse.json({ error: 'Forbidden — admin/staff only' }, { status: 403 })
-    }
-
-    // Fetch booking
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
       .select('*')
@@ -43,7 +30,6 @@ export async function PATCH(
       )
     }
 
-    // Update booking status
     const { data: updated, error: updateError } = await supabase
       .from('bookings')
       .update({ status: 'approved', updated_at: new Date().toISOString() })
@@ -53,7 +39,6 @@ export async function PATCH(
 
     if (updateError) throw updateError
 
-    // Status history
     await supabase.from('booking_status_history').insert({
       booking_id: id,
       updated_by: user.id,
@@ -61,7 +46,6 @@ export async function PATCH(
       notes:      null,
     })
 
-    // Auto-create invoice
     const { data: invoice, error: invoiceError } = await supabase
       .from('invoices')
       .insert({

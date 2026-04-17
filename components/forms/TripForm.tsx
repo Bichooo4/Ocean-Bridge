@@ -1,8 +1,3 @@
-/**
- * TripForm — create a new trip (admin only)
- * Selects an active pricing plan; route and prices auto-fill from the plan.
- * Submits via POST /api/trips.
- */
 'use client'
 
 import { useState } from 'react'
@@ -167,7 +162,7 @@ export function TripForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border border-[#E5E7EB] bg-white p-6 shadow-sm">
 
-      {/* Pricing Plan */}
+      {}
       <div className="space-y-1.5">
         <Label htmlFor="pricing_plan_id">Pricing Plan</Label>
         <select
@@ -190,7 +185,7 @@ export function TripForm() {
         )}
       </div>
 
-      {/* Auto-filled plan info */}
+      {}
       {selectedPlan && (
         <div className="flex items-start gap-3 rounded-lg border border-[#4A90D9]/20 bg-[#EFF6FF] p-4 text-sm">
           <div className="mt-0.5">{TRANSPORT_ICONS[selectedPlan.transport_type]}</div>
@@ -206,7 +201,7 @@ export function TripForm() {
         </div>
       )}
 
-      {/* Dates */}
+      {}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="departure_date">Departure Date</Label>
@@ -241,7 +236,7 @@ export function TripForm() {
         </div>
       </div>
 
-      {/* Max containers */}
+      {}
       <div className="space-y-1.5">
         <Label htmlFor="max_containers">Max Containers</Label>
         <Input
@@ -258,7 +253,7 @@ export function TripForm() {
         )}
       </div>
 
-      {/* Actions */}
+      {}
       <div className="flex gap-3 pt-2">
         <Button
           type="button"

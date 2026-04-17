@@ -1,6 +1,3 @@
-// Client Component — controlled form with useState.
-// Company creates a new booking: selects a trip, adds containers, sees live price.
-// Fetches open trips from useTrips hook. Submits via POST /api/bookings.
 'use client'
 
 import { useState } from 'react'
@@ -37,7 +34,6 @@ export function BookingForm({ defaultTripId }: { defaultTripId?: string }) {
   const router = useRouter()
   const { trips, loading: tripsLoading } = useTrips()
 
-  // API already filters to open/full for company role; show only open ones with slots
   const openTrips = trips.filter((t) => t.status === 'open' || (t.status === 'full' && t.max_containers - t.booking_count > 0))
 
   const [tripId,      setTripId]    = useState(defaultTripId ?? '')
@@ -53,7 +49,6 @@ export function BookingForm({ defaultTripId }: { defaultTripId?: string }) {
     ? calculatePrice(selectedTrip.base_price, totalWeight, selectedTrip.per_kg_rate)
     : 0
 
-  // Default to first available trip if nothing pre-selected
   if (!tripId && openTrips.length > 0 && !tripsLoading) {
     setTripId(defaultTripId ?? openTrips[0].id)
   }
@@ -127,7 +122,7 @@ export function BookingForm({ defaultTripId }: { defaultTripId?: string }) {
 
   return (
     <div className="space-y-6">
-      {/* Trip selection */}
+      {}
       <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">
         <p className="mb-4 text-xs font-bold uppercase tracking-widest text-[#6B7280]">
           Select Trip
@@ -179,7 +174,7 @@ export function BookingForm({ defaultTripId }: { defaultTripId?: string }) {
         )}
       </div>
 
-      {/* Containers */}
+      {}
       <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
           <p className="text-xs font-bold uppercase tracking-widest text-[#6B7280]">
@@ -238,7 +233,7 @@ export function BookingForm({ defaultTripId }: { defaultTripId?: string }) {
         </div>
       </div>
 
-      {/* Notes */}
+      {}
       <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">
         <p className="mb-3 text-xs font-bold uppercase tracking-widest text-[#6B7280]">
           Notes (optional)
@@ -251,7 +246,7 @@ export function BookingForm({ defaultTripId }: { defaultTripId?: string }) {
         />
       </div>
 
-      {/* Price summary + submit */}
+      {}
       <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">
         <p className="mb-3 text-xs font-bold uppercase tracking-widest text-[#6B7280]">
           Price Estimate

@@ -1,13 +1,3 @@
-/**
- * Root layout — wraps every page in the application
- * Server Component: metadata export and font loading are server-only features
- *
- * Responsibilities:
- *   - Load Inter font via next/font/google
- *   - Set global <head> metadata (title, description)
- *   - Mount the Sonner Toaster so toast notifications work app-wide
- */
-
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'

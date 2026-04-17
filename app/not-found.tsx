@@ -1,6 +1,3 @@
-// Server Component — custom 404 page.
-// Rendered by Next.js when notFound() is called or a route doesn't match.
-
 import Link from 'next/link'
 import { Ship } from 'lucide-react'
 

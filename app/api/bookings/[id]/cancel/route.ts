@@ -1,9 +1,5 @@
-// API Route — /api/bookings/[id]/cancel
-// PATCH: cancel a booking — allowed for company (own) or staff/admin (any)
-// Releases trip capacity and cancels linked invoice
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth'
 import { cancelBookingSchema } from '@/lib/validations/booking'
 
 export async function PATCH(
@@ -12,14 +8,9 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const role = (user.app_metadata?.role ?? '') as string
+    const auth = await requireAuth()
+    if (!auth.ok) return auth.response
+    const { user, role, supabase } = auth
 
     const body = await req.json().catch(() => ({}))
     const parsed = cancelBookingSchema.safeParse(body)
@@ -29,7 +20,6 @@ export async function PATCH(
 
     const { cancel_reason } = parsed.data
 
-    // Fetch booking
     const { data: booking, error: bookingError } = await supabase
       .from('bookings')
       .select('*')
@@ -42,7 +32,6 @@ export async function PATCH(
 
     const b = booking as Record<string, unknown>
 
-    // Company can only cancel their own
     if (role === 'company' && b.company_id !== user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
@@ -56,7 +45,6 @@ export async function PATCH(
 
     const now = new Date().toISOString()
 
-    // Update booking
     const { data: updated, error: updateError } = await supabase
       .from('bookings')
       .update({
@@ -71,14 +59,12 @@ export async function PATCH(
 
     if (updateError) throw updateError
 
-    // Cancel linked invoice
     await supabase
       .from('invoices')
       .update({ status: 'cancelled', cancelled_at: now })
       .eq('booking_id', id)
       .eq('status', 'unpaid')
 
-    // Status history
     await supabase.from('booking_status_history').insert({
       booking_id: id,
       updated_by: user.id,
@@ -86,7 +72,6 @@ export async function PATCH(
       notes:      cancel_reason ?? 'Booking cancelled',
     })
 
-    // Recalculate trip capacity — if trip was full, set back to open
     const { data: containerRows } = await supabase
       .from('containers')
       .select('id', { count: 'exact' })
@@ -105,7 +90,7 @@ export async function PATCH(
         const t = tripRow as Record<string, unknown>
 
         if (t.status === 'full') {
-          // Count remaining non-cancelled containers
+
           const { data: otherBookingIds } = await supabase
             .from('bookings')
             .select('id')

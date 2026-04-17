@@ -1,4 +1,3 @@
-// Client Component — Recharts PieChart showing booking counts per status.
 'use client'
 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'

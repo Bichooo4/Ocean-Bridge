@@ -1,5 +1,3 @@
-// Client Component — admin trips management with live data.
-// Uses useTrips hook — replaces mock data.
 'use client'
 
 import { useState } from 'react'
@@ -47,8 +45,6 @@ export default function AdminTripsPage() {
   const [transport, setTransport] = useState<TransportType | 'all'>('all')
   const [status,    setStatus]    = useState<TripStatus | 'all'>('all')
 
-  // Pass status and transport to the hook so the server filters and paginates.
-  // Text search remains client-side (cheap, no round-trip needed).
   const {
     trips, total, page, pageSize, totalPages, loading, error, setPage,
   } = useTrips(

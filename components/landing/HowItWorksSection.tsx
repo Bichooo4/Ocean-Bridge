@@ -1,7 +1,3 @@
-// Server Component
-// How it works section — 4-step process for new companies.
-// Static content showing the booking journey.
-
 import { UserPlus, Search, Package, Truck } from 'lucide-react'
 
 const STEPS = [
@@ -35,7 +31,7 @@ export function HowItWorksSection() {
   return (
     <section id="how-it-works" className="bg-white py-24">
       <div className="mx-auto max-w-7xl px-6">
-        {/* Section header */}
+        {}
         <div className="mb-16 text-center">
           <span className="text-xs font-bold uppercase tracking-widest text-[#4A90D9]">
             How It Works
@@ -45,9 +41,9 @@ export function HowItWorksSection() {
           </h2>
         </div>
 
-        {/* Steps */}
+        {}
         <div className="relative grid gap-10 md:grid-cols-4 md:gap-6">
-          {/* Connector line — desktop only */}
+          {}
           <div className="absolute left-0 right-0 top-10 hidden h-px border-t-2 border-dashed border-[#E5E7EB] md:block"
             style={{ left: '12.5%', right: '12.5%' }}
           />
@@ -56,13 +52,13 @@ export function HowItWorksSection() {
             const Icon = step.icon
             return (
               <div key={step.number} className="relative flex flex-col items-center text-center">
-                {/* Number circle */}
+                {}
                 <div className="relative z-10 flex h-20 w-20 flex-col items-center justify-center rounded-full bg-[#1B2E5E] shadow-lg">
                   <span className="text-xs font-bold text-white/60">{step.number}</span>
                   <Icon className="h-6 w-6 text-white" />
                 </div>
 
-                {/* Text */}
+                {}
                 <h3 className="mt-5 text-base font-bold text-[#1B2E5E]">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-[#6B7280]">{step.description}</p>
               </div>

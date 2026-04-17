@@ -1,21 +1,12 @@
-// API Route — /api/bookings
-// GET: returns bookings filtered by role (RLS enforces company isolation)
-// POST: company only — creates booking with containers
-//       price is always calculated server-side
-//       capacity check prevents overbooking
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth, requireRole } from '@/lib/auth'
 import { createBookingSchema } from '@/lib/validations/booking'
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const auth = await requireAuth()
+    if (!auth.ok) return auth.response
+    const { supabase } = auth
 
     const { searchParams } = req.nextUrl
     const statusParam  = searchParams.get('status')
@@ -26,9 +17,6 @@ export async function GET(req: NextRequest) {
     const limit        = Math.min(Math.max(parseInt(searchParams.get('limit')  ?? '50', 10), 1), 200)
     const offset       = Math.max(parseInt(searchParams.get('offset') ?? '0',  10), 0)
 
-    // RLS on bookings table already scopes company users to their own rows.
-    // We just join companies + trips for display names.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let query: any = supabase
       .from('bookings')
       .select(`
@@ -49,7 +37,6 @@ export async function GET(req: NextRequest) {
     const { data, error, count } = await query
     if (error) throw error
 
-    // Flatten nested join data into EnrichedBooking shape
     const bookings = ((data ?? []) as Record<string, unknown>[]).map((b) => {
       const companies  = b.companies  as Record<string, string>  | null
       const trips      = b.trips      as Record<string, string>  | null
@@ -74,17 +61,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Company only
-    if (user.app_metadata?.role !== 'company') {
-      return NextResponse.json({ error: 'Forbidden — company only' }, { status: 403 })
-    }
+    const auth = await requireRole(['company'])
+    if (!auth.ok) return auth.response
+    const { user, supabase } = auth
 
     const body = await req.json()
     const parsed = createBookingSchema.safeParse(body)
@@ -97,7 +76,6 @@ export async function POST(req: NextRequest) {
 
     const { trip_id, notes, containers } = parsed.data
 
-    // Fetch trip for server-side price calculation
     const { data: trip, error: tripError } = await supabase
       .from('trips')
       .select('base_price, per_kg_rate, status, max_containers')
@@ -114,11 +92,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Trip is not accepting bookings' }, { status: 400 })
     }
 
-    // Server-side price calculation (never trust client)
     const total_weight_kg = containers.reduce((s, c) => s + c.weight_kg, 0)
     const total_price     = (t.base_price as number) + total_weight_kg * (t.per_kg_rate as number)
 
-    // Atomic booking creation via DB function (handles capacity lock + insert)
     const { data: rpcData, error: rpcError } = await supabase.rpc('create_booking', {
       p_trip_id:         trip_id,
       p_company_id:      user.id,
@@ -132,7 +108,7 @@ export async function POST(req: NextRequest) {
     })
 
     if (rpcError) {
-      // PostgreSQL RAISE EXCEPTION messages come back in rpcError.message
+
       const msg = rpcError.message ?? 'Failed to create booking'
       const status = msg.includes('capacity') || msg.includes('already have') ? 400 : 500
       return NextResponse.json({ error: msg }, { status })

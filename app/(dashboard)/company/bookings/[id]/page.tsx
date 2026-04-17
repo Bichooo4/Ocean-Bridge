@@ -1,7 +1,3 @@
-// Server Component — company booking detail with real Supabase data.
-// RLS ensures the company can only access their own booking.
-// Read-only: no approve/cancel actions for company role.
-
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Ship, Truck, Plane } from 'lucide-react'
@@ -51,13 +47,11 @@ export default async function CompanyBookingDetailPage({
   const { id } = await params
   const supabase = await createClient()
 
-  // Auth check
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
   const role = user.app_metadata?.role as string | undefined
   if (role !== 'company') redirect('/admin')
 
-  // Fetch booking — RLS ensures company only sees their own
   const { data: booking } = await supabase
     .from('bookings')
     .select(`
@@ -111,9 +105,9 @@ export default async function CompanyBookingDetailPage({
       />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
-        {/* Left column */}
+        {}
         <div className="space-y-5">
-          {/* Booking Info */}
+          {}
           <Section label="Booking Information">
             <div className="grid grid-cols-2 gap-x-6 gap-y-4">
               <Field label="Booking ID"   value={<span className="font-mono">{id.toUpperCase()}</span>} />
@@ -135,7 +129,7 @@ export default async function CompanyBookingDetailPage({
             </div>
           </Section>
 
-          {/* Trip Details */}
+          {}
           {trip && (
             <Section label="Trip Details">
               <div className="grid grid-cols-2 gap-x-6 gap-y-4">
@@ -166,7 +160,7 @@ export default async function CompanyBookingDetailPage({
             </Section>
           )}
 
-          {/* Containers */}
+          {}
           <Section label={`Containers (${containers.length})`}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -198,7 +192,7 @@ export default async function CompanyBookingDetailPage({
             </div>
           </Section>
 
-          {/* Status History */}
+          {}
           <Section label="Status History">
             {history.length === 0 ? (
               <p className="text-sm text-[#6B7280]">No status history available.</p>
@@ -227,7 +221,7 @@ export default async function CompanyBookingDetailPage({
           </Section>
         </div>
 
-        {/* Right column — Invoice */}
+        {}
         <div className="space-y-5">
           {invoice ? (
             <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">

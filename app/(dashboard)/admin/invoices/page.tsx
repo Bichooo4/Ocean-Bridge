@@ -1,5 +1,3 @@
-// Client Component — admin invoices with live data.
-// Uses useInvoices hook; toggle calls PATCH /api/invoices/[id].
 'use client'
 
 import { useState } from 'react'
@@ -46,7 +44,6 @@ export default function AdminInvoicesPage() {
   const [toggleTarget, setToggle]   = useState<string | null>(null)
   const [toggling,     setToggling] = useState(false)
 
-  // Pass server-filterable params to the hook; text search stays client-side.
   const {
     invoices, total: totalCount, page, pageSize, totalPages, loading, error, refetch, setPage,
   } = useInvoices(
@@ -57,7 +54,6 @@ export default function AdminInvoicesPage() {
 
   if (error) toast.error(error)
 
-  // Aggregate over the current page only (use the Reports page for full totals)
   const totalAmt  = invoices.reduce((s, i) => s + i.total_price, 0)
   const paid      = invoices.filter((i) => i.status === 'paid').reduce((s, i) => s + i.total_price, 0)
   const unpaid    = invoices.filter((i) => i.status === 'unpaid').reduce((s, i) => s + i.total_price, 0)

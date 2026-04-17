@@ -1,7 +1,3 @@
-// Server Component — staff booking detail with real Supabase data.
-// Fetches booking + trip + company + containers + history + invoice.
-// BookingActions is a client component for approve/cancel/invoice toggle.
-
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Ship, Truck, Plane } from 'lucide-react'
@@ -45,13 +41,11 @@ export default async function StaffBookingDetailPage({
   const { id } = await params
   const supabase = await createClient()
 
-  // Auth check
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
   const role = user.app_metadata?.role as string | undefined
   if (role !== 'admin' && role !== 'staff') redirect('/company')
 
-  // Fetch booking with all relations
   const { data: booking } = await supabase
     .from('bookings')
     .select(`
@@ -96,9 +90,9 @@ export default async function StaffBookingDetailPage({
       <PageHeader title="Booking Details" subtitle={`Booking ${id.toUpperCase()}`} />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
-        {/* Left column */}
+        {}
         <div className="space-y-5">
-          {/* Booking Info */}
+          {}
           <Section label="Booking Information">
             <div className="grid grid-cols-2 gap-x-6 gap-y-4">
               <Field label="Booking ID"   value={<span className="font-mono">{id.toUpperCase()}</span>} />
@@ -114,7 +108,7 @@ export default async function StaffBookingDetailPage({
             </div>
           </Section>
 
-          {/* Trip Details */}
+          {}
           {trip && (
             <Section label="Trip Details">
               <div className="grid grid-cols-2 gap-x-6 gap-y-4">
@@ -142,7 +136,7 @@ export default async function StaffBookingDetailPage({
             </Section>
           )}
 
-          {/* Containers */}
+          {}
           <Section label={`Containers (${containers.length})`}>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -174,7 +168,7 @@ export default async function StaffBookingDetailPage({
             </div>
           </Section>
 
-          {/* Status History */}
+          {}
           <Section label="Status History">
             <ol className="space-y-3">
               {history.map((entry, i) => (
@@ -193,9 +187,9 @@ export default async function StaffBookingDetailPage({
           </Section>
         </div>
 
-        {/* Right column */}
+        {}
         <div className="space-y-5">
-          {/* Company Info */}
+          {}
           {company && (
             <Section label="Company">
               <div className="space-y-3">
@@ -209,7 +203,7 @@ export default async function StaffBookingDetailPage({
             </Section>
           )}
 
-          {/* Actions + Invoice */}
+          {}
           <BookingActions
             bookingId={id}
             status={String(b.status) as BookingStatus}

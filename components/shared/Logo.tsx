@@ -1,7 +1,3 @@
-// Server Component
-// Renders the Ocean Bridge brand logo as a styled text+icon component.
-// Used in Sidebar (sm) and Landing page (lg).
-
 import { Ship } from 'lucide-react'
 import { cn } from '@/lib/utils'
 

@@ -1,4 +1,3 @@
-// Client Component — Recharts BarChart for trips by transport type.
 'use client'
 
 import {

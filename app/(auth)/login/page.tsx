@@ -1,7 +1,3 @@
-// Client Component — needs useState for form state and interactions
-// Login page for all user types (admin, staff, company).
-// On success, redirects based on user type from Supabase metadata.
-// Middleware handles role protection — this page only does auth.
 'use client'
 
 import { useState } from 'react'
@@ -48,7 +44,6 @@ export default function LoginPage() {
         return
       }
 
-      // app_metadata is server-only writable — use it for redirect, not user_metadata.
       const userType = data.user?.app_metadata?.role as string | undefined
       router.push(getRedirectPath(userType))
       router.refresh()
@@ -61,13 +56,13 @@ export default function LoginPage() {
 
   return (
     <div>
-      {/* Header */}
+      {}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-[#1B2E5E]">Welcome back</h1>
         <p className="mt-1 text-sm text-[#6B7280]">Sign in to your Ocean Bridge account</p>
       </div>
 
-      {/* Form */}
+      {}
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
@@ -129,7 +124,7 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      {/* Footer link */}
+      {}
       <p className="mt-6 text-center text-sm text-[#6B7280]">
         New company?{' '}
         <Link

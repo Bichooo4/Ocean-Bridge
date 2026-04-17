@@ -1,9 +1,5 @@
-// Server-side auth helper functions.
-// Used in server components, layouts, and API routes.
-// All functions create a fresh server client per request.
-// NEVER import this in client components — use @/lib/supabase/client instead.
-
 import { redirect } from 'next/navigation'
+import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 export interface CurrentUser {
@@ -13,7 +9,6 @@ export interface CurrentUser {
   name: string
 }
 
-// Get current session — returns null if not logged in
 export async function getSession() {
   try {
     const supabase = await createClient()
@@ -25,15 +20,12 @@ export async function getSession() {
   }
 }
 
-// Get current user with role info
-// Returns: { id, email, type, name } or null
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   try {
     const supabase = await createClient()
     const { data: { user }, error } = await supabase.auth.getUser()
     if (error || !user) return null
 
-    // app_metadata is server-only writable — safe to trust for role checks.
     const type = user.app_metadata?.role as 'admin' | 'staff' | 'company' | undefined
     if (!type) return null
 
@@ -66,8 +58,6 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   }
 }
 
-// Get user role from metadata
-// Returns: 'admin' | 'staff' | 'company' | null
 export async function getUserRole(): Promise<'admin' | 'staff' | 'company' | null> {
   try {
     const supabase = await createClient()
@@ -79,13 +69,45 @@ export async function getUserRole(): Promise<'admin' | 'staff' | 'company' | nul
   }
 }
 
-// Sign out user and redirect to /login
+type UserRole = 'admin' | 'staff' | 'company'
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
+
+type AuthOk = { ok: true; user: NonNullable<Awaited<ReturnType<SupabaseServerClient['auth']['getUser']>>['data']['user']>; role: UserRole; supabase: SupabaseServerClient }
+type AuthFail = { ok: false; response: NextResponse }
+type AuthResult = AuthOk | AuthFail
+
+export async function requireAuth(): Promise<AuthResult> {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error || !user) {
+    return { ok: false, response: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
+  }
+  const role = user.app_metadata?.role as UserRole | undefined
+  if (!role) {
+    return { ok: false, response: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
+  }
+  return { ok: true, user, role, supabase }
+}
+
+export async function requireRole(roles: UserRole[]): Promise<AuthResult> {
+  const result = await requireAuth()
+  if (!result.ok) return result
+  if (!roles.includes(result.role)) {
+    const label = roles.join('/') 
+    return {
+      ok: false,
+      response: NextResponse.json({ error: `Forbidden — ${label} only` }, { status: 403 }),
+    }
+  }
+  return result
+}
+
 export async function signOut() {
   try {
     const supabase = await createClient()
     await supabase.auth.signOut()
   } catch {
-    // Ignore sign-out errors
+
   }
   redirect('/login')
 }

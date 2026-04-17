@@ -1,7 +1,3 @@
-// Server Component
-// Stats band — social proof numbers shown below the hero.
-// Static data — update manually as business grows.
-
 const STATS = [
   { value: '500+', label: 'Active Shipments'  },
   { value: '50+',  label: 'Global Routes'     },
@@ -19,7 +15,7 @@ export function StatsSection() {
               key={stat.label}
               className="flex flex-col items-center gap-2 text-center"
             >
-              {/* Blue accent line */}
+              {}
               <span className="mb-1 block h-1 w-8 rounded-full bg-[#4A90D9]" />
 
               <p className="text-4xl font-extrabold text-[#1B2E5E] md:text-5xl">
@@ -27,7 +23,7 @@ export function StatsSection() {
               </p>
               <p className="text-sm font-medium text-[#6B7280]">{stat.label}</p>
 
-              {/* Vertical divider (visible between stats on desktop, not after last) */}
+              {}
               {i < STATS.length - 1 && (
                 <div className="absolute hidden md:block" />
               )}

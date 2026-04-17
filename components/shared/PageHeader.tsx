@@ -1,7 +1,3 @@
-// Server Component
-// Page header with title, optional subtitle, and optional action button.
-// Used at the top of every dashboard page.
-
 interface PageHeaderProps {
   title: string
   subtitle?: string

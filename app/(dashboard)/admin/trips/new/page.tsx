@@ -1,5 +1,3 @@
-// Admin — create new trip page.
-// Form logic lives in TripForm component.
 'use client'
 
 import Link from 'next/link'

@@ -1,8 +1,3 @@
-// Client Component — needs useState for multi-field form management
-// Company self-registration page. Admin and staff are NOT created here.
-// POSTs to /api/auth/signup (server route) which uses the adminClient to set
-// role in app_metadata — the only field that cannot be self-modified by users.
-// DB trigger handle_new_auth_user() auto-inserts into companies table.
 'use client'
 
 import { useState } from 'react'
@@ -88,8 +83,7 @@ export default function SignupPage() {
     setLoading(true)
 
     try {
-      // POST to server route — role is set in app_metadata (server-only writable)
-      // so users cannot escalate their own privileges via supabase.auth.updateUser().
+
       const res = await fetch('/api/auth/signup', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -139,15 +133,15 @@ export default function SignupPage() {
 
   return (
     <div>
-      {/* Header */}
+      {}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-[#1B2E5E]">Create your account</h1>
         <p className="mt-1 text-sm text-[#6B7280]">Join Ocean Bridge and start shipping</p>
       </div>
 
-      {/* Form */}
+      {}
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Company Name */}
+        {}
         <div className="space-y-1.5">
           <Label htmlFor="company_name">Company Name</Label>
           <Input
@@ -164,7 +158,7 @@ export default function SignupPage() {
           )}
         </div>
 
-        {/* Contact Name */}
+        {}
         <div className="space-y-1.5">
           <Label htmlFor="contact_name">Contact Person Name</Label>
           <Input
@@ -181,7 +175,7 @@ export default function SignupPage() {
           )}
         </div>
 
-        {/* Phone */}
+        {}
         <div className="space-y-1.5">
           <Label htmlFor="phone">
             Phone Number{' '}
@@ -197,7 +191,7 @@ export default function SignupPage() {
           />
         </div>
 
-        {/* Email */}
+        {}
         <div className="space-y-1.5">
           <Label htmlFor="email">Email Address</Label>
           <Input
@@ -213,7 +207,7 @@ export default function SignupPage() {
           {errors.email && <p className="text-xs text-red-600">{errors.email}</p>}
         </div>
 
-        {/* Password */}
+        {}
         <div className="space-y-1.5">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
@@ -243,7 +237,7 @@ export default function SignupPage() {
           {errors.password && <p className="text-xs text-red-600">{errors.password}</p>}
         </div>
 
-        {/* Confirm Password */}
+        {}
         <div className="space-y-1.5">
           <Label htmlFor="confirmPassword">Confirm Password</Label>
           <div className="relative">
@@ -299,7 +293,7 @@ export default function SignupPage() {
         </Button>
       </form>
 
-      {/* Footer link */}
+      {}
       <p className="mt-6 text-center text-sm text-[#6B7280]">
         Already have an account?{' '}
         <Link

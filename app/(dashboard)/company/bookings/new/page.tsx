@@ -1,8 +1,3 @@
-// Server Component
-// Company — create new booking.
-// Wraps BookingForm client component; trip pre-selection via ?trip_id= search param.
-// Static mock — connects to Supabase in Step 12.
-
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { PageHeader }    from '@/components/shared/PageHeader'

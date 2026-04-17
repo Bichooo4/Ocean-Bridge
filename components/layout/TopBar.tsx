@@ -1,6 +1,3 @@
-// Client Component — needs useState for mobile menu toggle
-// Top navigation bar. Shows page title, user avatar, and logout option.
-// Used inside DashboardLayout.
 'use client'
 
 import { Menu, Bell, LogOut } from 'lucide-react'
@@ -44,7 +41,7 @@ export function TopBar({ title, userName, userEmail, onMobileMenuOpen }: TopBarP
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-[#E5E7EB] bg-white px-4 md:px-6">
-      {/* Left side */}
+      {}
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
@@ -58,7 +55,7 @@ export function TopBar({ title, userName, userEmail, onMobileMenuOpen }: TopBarP
         <h1 className="text-lg font-semibold text-[#1B2E5E]">{title}</h1>
       </div>
 
-      {/* Right side */}
+      {}
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" aria-label="Notifications">
           <Bell className="h-5 w-5 text-[#6B7280]" />

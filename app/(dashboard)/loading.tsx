@@ -1,6 +1,3 @@
-// Server Component — Next.js Suspense fallback for the dashboard route segment.
-// Shown automatically while async Server Components in (dashboard) are loading.
-
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner'
 
 export default function DashboardLoading() {

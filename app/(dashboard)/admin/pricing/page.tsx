@@ -1,5 +1,3 @@
-// Client Component — pricing plans management with live data.
-// Uses usePricingPlans hook; toggle calls PATCH /api/pricing-plans/[id].
 'use client'
 
 import Link from 'next/link'

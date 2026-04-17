@@ -1,8 +1,3 @@
-// Server Component
-// Landing page — entry point for new visitors.
-// Composed of section components from @/components/landing/.
-// Public route — no auth required.
-
 import { LandingNav }        from '@/components/landing/LandingNav'
 import { HeroSection }       from '@/components/landing/HeroSection'
 import { StatsSection }      from '@/components/landing/StatsSection'

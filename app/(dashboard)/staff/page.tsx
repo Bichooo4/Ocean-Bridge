@@ -1,5 +1,3 @@
-// Client Component — staff dashboard home with live data.
-// Uses useBookings + useTrips hooks.
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -109,7 +107,7 @@ export default function StaffDashboardPage() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-            {/* Pending approvals */}
+            {}
             <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-[#1B2E5E]">Pending Approvals</h3>
@@ -128,7 +126,7 @@ export default function StaffDashboardPage() {
               )}
             </div>
 
-            {/* Activity feed */}
+            {}
             <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">
               <h3 className="mb-4 text-sm font-semibold text-[#1B2E5E]">Activity Feed</h3>
               {hLoading ? (
@@ -149,7 +147,7 @@ export default function StaffDashboardPage() {
             </div>
           </div>
 
-          {/* Active trips */}
+          {}
           <div>
             <h3 className="mb-4 text-base font-semibold text-[#1B2E5E]">Active Trips</h3>
             <DataTable<TripWithCount>

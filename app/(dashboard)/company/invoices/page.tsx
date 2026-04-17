@@ -1,5 +1,3 @@
-// Client Component — company invoices with live data (read-only).
-// Uses useInvoices hook — RLS scopes to logged-in company.
 'use client'
 
 import { useState } from 'react'

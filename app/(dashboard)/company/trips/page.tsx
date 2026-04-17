@@ -1,5 +1,3 @@
-// Client Component — company browse available trips with live data.
-// Uses useTrips hook — API filters to open/full trips for company role.
 'use client'
 
 import Link from 'next/link'
@@ -21,7 +19,7 @@ const TRANSPORT_ICONS: Record<TransportType, React.ReactNode> = {
 }
 
 export default function CompanyTripsPage() {
-  // API returns only open/full for company role
+
   const { trips, loading, error } = useTrips()
 
   if (error) toast.error(error)

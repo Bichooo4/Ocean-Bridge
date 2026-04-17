@@ -1,8 +1,3 @@
-// Server Route Handler
-// Handles Supabase auth callback after email confirmation.
-// Exchanges the auth code for a session, then redirects to root.
-// Middleware will then route to the correct dashboard based on role.
-
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 

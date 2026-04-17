@@ -1,7 +1,3 @@
-// Server Component
-// Simple animated loading spinner.
-// Used as fallback in Suspense boundaries and loading states.
-
 import { cn } from '@/lib/utils'
 
 interface LoadingSpinnerProps {

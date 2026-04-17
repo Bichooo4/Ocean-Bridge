@@ -1,6 +1,3 @@
-// Client Component — controlled by parent via open/onOpenChange props
-// Reusable confirmation dialog for destructive actions.
-// Pass variant='danger' for red confirm button (e.g. cancel booking).
 'use client'
 
 import {

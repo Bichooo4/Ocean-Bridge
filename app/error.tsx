@@ -1,7 +1,4 @@
 'use client'
-// Global error boundary — catches unhandled runtime errors across the app.
-// Next.js renders this when an error is thrown in a Server Component or
-// during rendering. The reset() function re-renders the failed subtree.
 
 import { useEffect } from 'react'
 import { AlertTriangle } from 'lucide-react'
@@ -15,7 +12,7 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log to an error reporting service in production
+
     console.error(error)
   }, [error])
 

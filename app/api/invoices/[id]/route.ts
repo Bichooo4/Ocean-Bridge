@@ -1,9 +1,5 @@
-// API Route — /api/invoices/[id]
-// PATCH: admin/staff toggles invoice paid/unpaid
-// Company cannot change invoice status
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireRole } from '@/lib/auth'
 import { updateInvoiceStatusSchema } from '@/lib/validations/invoice'
 
 export async function PATCH(
@@ -12,17 +8,9 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const role = (user.app_metadata?.role ?? '') as string
-    if (!['admin', 'staff'].includes(role)) {
-      return NextResponse.json({ error: 'Forbidden — admin/staff only' }, { status: 403 })
-    }
+    const auth = await requireRole(['admin', 'staff'])
+    if (!auth.ok) return auth.response
+    const { supabase } = auth
 
     const body = await req.json()
     const parsed = updateInvoiceStatusSchema.safeParse(body)
@@ -33,7 +21,6 @@ export async function PATCH(
       )
     }
 
-    // Fetch invoice to check current status
     const { data: invoice, error: fetchError } = await supabase
       .from('invoices')
       .select('*')

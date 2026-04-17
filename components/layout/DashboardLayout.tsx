@@ -1,7 +1,3 @@
-// Client Component — needs useState for mobile sidebar open/close
-// Master layout wrapper for all dashboard pages.
-// Combines Sidebar + TopBar + scrollable main content area.
-// Handles responsive behavior: drawer on mobile, fixed sidebar on desktop.
 'use client'
 
 import { useState } from 'react'
@@ -28,12 +24,12 @@ export function DashboardLayout({
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#F8F9FB]">
-      {/* Desktop Sidebar — hidden on mobile */}
+      {}
       <div className="hidden shrink-0 md:flex">
         <Sidebar role={role} userName={userName} userEmail={userEmail} />
       </div>
 
-      {/* Mobile Sidebar — Sheet from shadcn */}
+      {}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent side="left" className="w-64 p-0">
           <Sidebar
@@ -45,7 +41,7 @@ export function DashboardLayout({
         </SheetContent>
       </Sheet>
 
-      {/* Main content */}
+      {}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <TopBar
           title={title}

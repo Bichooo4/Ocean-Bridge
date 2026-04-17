@@ -1,7 +1,3 @@
-// Client Component — needs useState for multiple confirm dialogs.
-// Booking action buttons shown on staff/admin booking detail page.
-// Available actions depend on current booking status.
-// Calls real API routes: approve, cancel, invoice toggle.
 'use client'
 
 import { useState } from 'react'
@@ -104,7 +100,7 @@ export function BookingActions({ bookingId, status, cancelReason, invoice }: Boo
 
   return (
     <div className="space-y-4">
-      {/* ── Actions card ── */}
+      {}
       <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">
         <p className="mb-3 text-xs font-bold uppercase tracking-widest text-[#6B7280]">Actions</p>
 
@@ -169,7 +165,7 @@ export function BookingActions({ bookingId, status, cancelReason, invoice }: Boo
         )}
       </div>
 
-      {/* ── Invoice card ── */}
+      {}
       {invoice && (
         <div className="rounded-xl border border-[#E5E7EB] bg-white p-5">
           <p className="mb-3 text-xs font-bold uppercase tracking-widest text-[#6B7280]">Invoice</p>
@@ -216,7 +212,7 @@ export function BookingActions({ bookingId, status, cancelReason, invoice }: Boo
         </div>
       )}
 
-      {/* Dialogs */}
+      {}
       <ConfirmDialog
         open={approveOpen}
         onOpenChange={setApproveOpen}

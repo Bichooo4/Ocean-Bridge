@@ -1,5 +1,3 @@
-// Admin — create new pricing plan page.
-// Form logic lives in PricingPlanForm component.
 'use client'
 
 import Link from 'next/link'

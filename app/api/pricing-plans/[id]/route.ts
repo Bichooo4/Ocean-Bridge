@@ -1,8 +1,5 @@
-// API Route — /api/pricing-plans/[id]
-// PATCH: admin only — toggle is_active on a pricing plan
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireRole } from '@/lib/auth'
 import { z } from 'zod'
 
 const toggleSchema = z.object({
@@ -15,16 +12,9 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    if (user.app_metadata?.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden — admin only' }, { status: 403 })
-    }
+    const auth = await requireRole(['admin'])
+    if (!auth.ok) return auth.response
+    const { supabase } = auth
 
     const body = await req.json()
     const parsed = toggleSchema.safeParse(body)

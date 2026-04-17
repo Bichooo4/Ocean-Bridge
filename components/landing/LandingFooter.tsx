@@ -1,7 +1,3 @@
-// Server Component
-// Landing page footer with brand info, nav links, and legal links.
-// All links except /login and /signup are placeholders.
-
 import Link from 'next/link'
 import { Logo } from '@/components/shared/Logo'
 
@@ -21,9 +17,9 @@ export function LandingFooter() {
   return (
     <footer className="bg-[#0F1E3D]">
       <div className="mx-auto max-w-7xl px-6 py-12">
-        {/* 3-column grid */}
+        {}
         <div className="grid gap-10 md:grid-cols-3">
-          {/* Col 1 — Brand */}
+          {}
           <div className="flex flex-col gap-4">
             <Logo size="lg" white />
             <p className="text-sm text-white/50">Move Smart · Ship Strong</p>
@@ -32,7 +28,7 @@ export function LandingFooter() {
             </p>
           </div>
 
-          {/* Col 2 — Platform */}
+          {}
           <div>
             <p className="mb-4 text-xs font-bold uppercase tracking-widest text-white/40">
               Platform
@@ -51,7 +47,7 @@ export function LandingFooter() {
             </ul>
           </div>
 
-          {/* Col 3 — Legal */}
+          {}
           <div>
             <p className="mb-4 text-xs font-bold uppercase tracking-widest text-white/40">
               Legal
@@ -71,7 +67,7 @@ export function LandingFooter() {
           </div>
         </div>
 
-        {/* Bottom divider */}
+        {}
         <div className="mt-10 border-t border-white/10 pt-6">
           <p className="text-center text-xs text-white/30">
             Built for modern logistics teams worldwide.

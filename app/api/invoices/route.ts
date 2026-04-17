@@ -1,17 +1,11 @@
-// API Route — /api/invoices
-// GET: returns invoices filtered by role via RLS
-
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth'
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createClient()
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const auth = await requireAuth()
+    if (!auth.ok) return auth.response
+    const { supabase } = auth
 
     const { searchParams } = req.nextUrl
     const statusParam   = searchParams.get('status')
@@ -21,9 +15,6 @@ export async function GET(req: NextRequest) {
     const limit         = Math.min(Math.max(parseInt(searchParams.get('limit')  ?? '50', 10), 1), 200)
     const offset        = Math.max(parseInt(searchParams.get('offset') ?? '0',  10), 0)
 
-    // RLS scopes company users to their own invoices automatically.
-    // We join company name for display.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let query: any = supabase
       .from('invoices')
       .select(`

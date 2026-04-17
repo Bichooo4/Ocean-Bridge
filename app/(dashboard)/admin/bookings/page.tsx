@@ -1,5 +1,3 @@
-// Client Component — admin all-bookings page with live data.
-// Uses useBookings hook; approve/cancel call API routes.
 'use client'
 
 import { useState } from 'react'
@@ -39,7 +37,6 @@ export default function AdminBookingsPage() {
   const [cancelTarget, setCancelTarget] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
 
-  // Pass server-filterable params into the hook; text search stays client-side.
   const {
     bookings, total, page, pageSize, totalPages, loading, error, refetch, setPage,
   } = useBookings(

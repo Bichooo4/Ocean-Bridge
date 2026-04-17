@@ -1,5 +1,3 @@
-// Client Component — reusable trips filter bar.
-// Uses useTrips hook — replaces mock data.
 'use client'
 
 import { useState } from 'react'
